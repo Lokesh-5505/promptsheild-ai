@@ -1,0 +1,15 @@
+{
+  "model_name": "PromptShield-NLP-CalibratedClassifier-v3",
+  "classes": [
+    "benign",
+    "data_exfiltration",
+    "instruction_override",
+    "prompt_extraction",
+    "unauthorized_action"
+  ],
+  "accuracy": 0.9925,
+  "macro_f1": 0.9879,
+  "total_samples": 5349,
+  "test_samples": 1070,
+  "random_seed": 42
+}

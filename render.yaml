@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: promptshield-ai
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENVIRONMENT
+        value: production
+      - key: DEFAULT_ADMIN_KEY
+        value: ps_live_admin_secret_key_9921
+      - key: RATE_LIMIT_PER_MINUTE
+        value: "60"
+      - key: POLICY_LOW_MAX
+        value: "39"
+      - key: POLICY_MEDIUM_MAX
+        value: "69"
+      - key: POLICY_HIGH_MAX
+        value: "89"

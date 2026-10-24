@@ -1,0 +1,98 @@
+{
+  "model_architecture": "Dual-Representation TF-IDF (Word 1-3 + Char 3-6) + Calibrated Multi-Class Classifier",
+  "classes": [
+    "benign",
+    "data_exfiltration",
+    "instruction_override",
+    "prompt_extraction",
+    "unauthorized_action"
+  ],
+  "accuracy": 0.9925,
+  "macro_f1": 0.9879,
+  "weighted_f1": 0.9926,
+  "total_dataset_size": 5349,
+  "train_set_size": 4279,
+  "test_set_size": 1070,
+  "confusion_matrix": [
+    [
+      78,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      103,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      0,
+      716,
+      2,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      104,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      61
+    ]
+  ],
+  "classification_report": {
+    "benign": {
+      "precision": 0.9285714285714286,
+      "recall": 1.0,
+      "f1-score": 0.9629629629629629,
+      "support": 78.0
+    },
+    "data_exfiltration": {
+      "precision": 1.0,
+      "recall": 0.9903846153846154,
+      "f1-score": 0.9951690821256038,
+      "support": 104.0
+    },
+    "instruction_override": {
+      "precision": 1.0,
+      "recall": 0.9916897506925207,
+      "f1-score": 0.9958275382475661,
+      "support": 722.0
+    },
+    "prompt_extraction": {
+      "precision": 0.9811320754716981,
+      "recall": 0.9904761904761905,
+      "f1-score": 0.985781990521327,
+      "support": 105.0
+    },
+    "unauthorized_action": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 61.0
+    },
+    "accuracy": 0.9925233644859813,
+    "macro avg": {
+      "precision": 0.9819407008086254,
+      "recall": 0.9945101113106652,
+      "f1-score": 0.9879483147714918,
+      "support": 1070.0
+    },
+    "weighted avg": {
+      "precision": 0.9929415321057007,
+      "recall": 0.9925233644859813,
+      "f1-score": 0.9926198946464074,
+      "support": 1070.0
+    }
+  }
+}

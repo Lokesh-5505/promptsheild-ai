@@ -1,0 +1,14 @@
+.git
+.github
+.agents
+.pytest_cache
+tests
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.local
+scratch
+Dockerfile*
+docker-compose.yml

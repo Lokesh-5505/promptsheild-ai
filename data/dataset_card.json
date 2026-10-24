@@ -1,0 +1,46 @@
+{
+  "dataset_name": "PromptShield-Security-Corpus-v3-Expanded",
+  "description": "Multi-class prompt injection, jailbreak, and adversarial security corpus with diverse real-world benign everyday tasks and false positive controls.",
+  "random_seed": 42,
+  "total_samples": 5349,
+  "train_samples": 4279,
+  "test_samples": 1070,
+  "categories": [
+    "benign",
+    "instruction_override",
+    "prompt_extraction",
+    "data_exfiltration",
+    "unauthorized_action"
+  ],
+  "class_distribution_total": {
+    "instruction_override": 3609,
+    "prompt_extraction": 524,
+    "data_exfiltration": 519,
+    "benign": 389,
+    "unauthorized_action": 308
+  },
+  "class_distribution_train": {
+    "instruction_override": 2887,
+    "prompt_extraction": 419,
+    "data_exfiltration": 415,
+    "benign": 311,
+    "unauthorized_action": 247
+  },
+  "class_distribution_test": {
+    "instruction_override": 722,
+    "prompt_extraction": 105,
+    "data_exfiltration": 104,
+    "benign": 78,
+    "unauthorized_action": 61
+  },
+  "schema": {
+    "text": "The prompt string or injected payload",
+    "category": "One of: benign, instruction_override, prompt_extraction, data_exfiltration, unauthorized_action",
+    "is_injection": "Boolean flag (False for benign, True for threats)",
+    "label_id": "Integer class id (0 to 4)",
+    "char_length": "Character count of the prompt string",
+    "source_type": "Origin channel: user_prompt, email_body, or retrieved_document"
+  },
+  "license": "Apache-2.0",
+  "evaluation_split_ratio": 0.2
+}

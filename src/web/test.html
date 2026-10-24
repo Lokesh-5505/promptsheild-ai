@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Lab & Testing Console — PromptShield AI</title>
+  <meta name="description" content="Dedicated testing workbench for inspecting prompt attacks, evaluating attack benchmarks, and simulating autonomous AI agent defense.">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230052FF'><path d='M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z'/></svg>">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <a href="/" class="brand" id="brand-logo">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+            </svg>
+          </div>
+          <div class="brand-title">
+            PromptShield <span>AI</span>
+          </div>
+        </a>
+        <span class="badge-decision badge-allow desktop-badge" style="font-size: 0.72rem; padding: 0.2rem 0.6rem;">Security Lab Console</span>
+      </div>
+
+      <nav class="nav-links">
+        <a href="/" class="nav-link" id="nav-home"><span class="desktop-only">← Back to Overview</span><span class="mobile-only">← Back</span></a>
+        <a href="/docs" target="_blank" class="nav-link desktop-only" id="nav-docs">Swagger API Docs ↗</a>
+        <div class="pulse-pill" id="cluster-indicator-pill">
+          <span class="live-pill-dot" id="cluster-dot"></span>
+          <span id="cluster-status-label">Atlas Ready</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="workbench-main">
+    <!-- Console Intro Header -->
+    <div style="margin-bottom: 2rem;">
+      <div class="section-badge">
+        <span class="badge-dot"></span>
+        <span class="badge-text">Interactive Security Workbench</span>
+      </div>
+      <h1 class="workbench-title">
+        AI Agent Protection <span class="gradient-text">Testing Console</span>
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 48rem; margin-top: 0.35rem;">
+        Test and verify PromptShield against prompt injection, data exfiltration, and indirect RAG poisoning vectors across four dedicated testing modules.
+      </p>
+    </div>
+
+    <!-- Modular Segmented Tab Bar -->
+    <div class="console-nav-tabs" role="tablist">
+      <button class="console-tab-btn active" id="tab-btn-prompt" onclick="switchConsoleTab('prompt')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        1. Prompt Inspector
+      </button>
+
+      <button class="console-tab-btn" id="tab-btn-agent" onclick="switchConsoleTab('agent')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
+        2. Agent Defense Sandbox
+      </button>
+
+      <button class="console-tab-btn" id="tab-btn-benchmarks" onclick="switchConsoleTab('benchmarks')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        3. Attack Benchmarks & Sites
+      </button>
+
+      <button class="console-tab-btn" id="tab-btn-logs" onclick="switchConsoleTab('logs')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+        4. Session Audit Logs
+      </button>
+    </div>
+
+    <!-- ====================================================
+         MODULE 1: DIRECT PROMPT INSPECTOR
+         ==================================================== -->
+    <div class="console-tab-pane active" id="pane-prompt">
+      <div class="workbench-grid">
+        <!-- Left: Input & Templates -->
+        <div class="workbench-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.15rem; font-weight: 700;">Direct Text / Payload Inspection</h3>
+            <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">Unseeded Input</span>
+          </div>
+
+          <div style="margin-bottom: 0.85rem;">
+            <div style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">Select Attack Scenario to Test:</div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="preset-chip" onclick="loadPromptExample('override')">⚡ Instruction Override</button>
+              <button class="preset-chip" onclick="loadPromptExample('exfil')">⚡ Data Exfiltration</button>
+              <button class="preset-chip" onclick="loadPromptExample('jailbreak')">⚡ DAN Jailbreak</button>
+              <button class="preset-chip" onclick="loadPromptExample('policy')">✓ Corporate Policy (Benign)</button>
+            </div>
+          </div>
+
+          <textarea class="input-styled" style="height: 180px; font-size: 0.88rem;" id="prompt-input-text" placeholder="Type or paste any untrusted prompt, inbound email, or RAG context chunk to inspect..."></textarea>
+
+          <div class="workbench-action-row">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 0.78rem; color: var(--text-muted);">Source Type:</span>
+              <select class="preset-chip" style="background: #FFFFFF;" id="prompt-source-select">
+                <option value="user_prompt">user_prompt</option>
+                <option value="email_body">email_body</option>
+                <option value="retrieved_document">retrieved_document</option>
+              </select>
+            </div>
+
+            <button class="btn-primary" id="btn-inspect-prompt" onclick="runPromptInspection()">
+              Analyze Payload
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Real-time Analysis Card -->
+        <div class="workbench-card" id="prompt-result-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-subtle);">
+              <span style="font-weight: 700; font-size: 0.95rem;">Security Analysis Breakdown</span>
+              <span id="prompt-latency-badge" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">Latency: -- ms</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+              <span class="badge-decision badge-allow" id="prompt-decision-badge">READY</span>
+              <div>
+                <div style="font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700;" id="prompt-risk-score">Risk: 0 / 100</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);" id="prompt-category-label">Classification: Standing By</div>
+              </div>
+            </div>
+
+            <!-- Visual Risk Meter -->
+            <div class="gauge-meter-wrapper">
+              <div class="gauge-meter-fill" id="prompt-gauge-fill" style="width: 0%; background-color: var(--status-safe);"></div>
+            </div>
+
+            <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">Token Highlight Analysis:</div>
+            <div id="prompt-evidence-view" style="font-size: 0.85rem; line-height: 1.6; padding: 0.85rem; background: var(--bg-canvas); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); max-height: 140px; overflow-y: auto;">
+              Enter a payload on the left and click <strong>Analyze Payload</strong> to inspect risks.
+            </div>
+          </div>
+
+          <div style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
+            <button class="btn-secondary" style="width: 100%; font-size: 0.78rem; padding: 0.45rem;" onclick="togglePromptRawJson()">Toggle Raw JSON Response</button>
+            <pre class="raw-json-panel" id="prompt-raw-json" style="display: none; margin-top: 0.5rem;"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         MODULE 2: AUTONOMOUS AI AGENT DEFENSE SANDBOX
+         ==================================================== -->
+    <div class="console-tab-pane" id="pane-agent">
+      <div class="workbench-card" style="background: var(--bg-inverted); color: #FFFFFF; border-color: var(--border-inverted);">
+        <!-- Top Control Bar -->
+        <div class="sandbox-top-bar">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+              <span class="live-pill-dot" style="background: #4D7CFF; box-shadow: 0 0 8px #4D7CFF;"></span>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #FFFFFF;">Autonomous AI Agent Defense Gateway</h3>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-light-muted);">
+              Pre-LLM protection gateway for testing live third-party autonomous AI agents against prompt injection and unauthorized tool execution.
+            </p>
+          </div>
+
+          <!-- Protection Toggle -->
+          <div class="sandbox-toggle-wrapper">
+            <span style="font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: #FFFFFF;" id="agent-toggle-status-text">
+              SHIELD: ACTIVE 🛡️
+            </span>
+            <label class="switch">
+              <input type="checkbox" id="agent-shield-toggle" checked onchange="handleAgentToggleChange()">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Split Grid: Target Setup vs Dynamic Agent Outcome -->
+        <div class="workbench-grid workbench-grid-half">
+          <!-- Left: Agent Persona & Prompt -->
+          <div>
+            <!-- Agent Endpoint Configuration -->
+            <div style="margin-bottom: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-light-muted); text-transform: uppercase;">
+                  Third-Party Agent Connection
+                </span>
+                <span style="font-size: 0.72rem; color: #10B981; font-weight: 600;">Production Ready</span>
+              </div>
+              <select class="input-styled" style="height: 42px; background: rgba(15, 23, 42, 0.8); color: #FFFFFF; border-color: var(--border-inverted); font-size: 0.82rem;" id="sandbox-target-agent-select" onchange="handleAgentEndpointSelectChange()">
+                <option value="/api/v1/agent/local">Built-in Autonomous Agent (Directly Evaluated by PromptShield Model)</option>
+                <option value="http://localhost:11434/v1/chat/completions">Local Ollama LLM Agent (http://localhost:11434/v1)</option>
+                <option value="http://localhost:1234/v1/chat/completions">Local LM Studio Agent (http://localhost:1234/v1)</option>
+                <option value="https://api.groq.com/openai/v1/chat/completions">Groq Cloud LLM API (Free Tier)</option>
+                <option value="https://openrouter.ai/api/v1/chat/completions">OpenRouter Free Tier (meta-llama/llama-3-8b-instruct:free)</option>
+                <option value="custom">Custom Agent Endpoint / Webhook URL...</option>
+              </select>
+            </div>
+
+            <!-- Custom URL and Auth if custom selected -->
+            <div id="sandbox-custom-endpoint-row" style="display: none; margin-bottom: 0.85rem;">
+              <input type="text" class="input-styled" style="height: 38px; background: rgba(15, 23, 42, 0.8); color: #FFFFFF; border-color: var(--border-inverted); font-size: 0.82rem; margin-bottom: 0.4rem;" id="sandbox-custom-url" placeholder="Enter target agent POST URL (e.g. http://localhost:5000/agent/chat)">
+              <input type="password" class="input-styled" style="height: 38px; background: rgba(15, 23, 42, 0.8); color: #FFFFFF; border-color: var(--border-inverted); font-size: 0.82rem;" id="sandbox-custom-api-key" placeholder="Optional Bearer API Key (e.g. gsk_... / sk-or-...)">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-light-muted); text-transform: uppercase;">
+                Target Agent Role
+              </span>
+              <select class="preset-chip" style="background: rgba(255, 255, 255, 0.08); color: #FFFFFF;" id="sandbox-agent-role">
+                <option value="email_assistant">Executive Email Assistant</option>
+                <option value="support_agent">Customer Support Agent</option>
+                <option value="rag_bot">RAG Knowledge Assistant</option>
+              </select>
+            </div>
+
+            <textarea class="input-styled" style="height: 120px; background: rgba(15, 23, 42, 0.7); color: #FFFFFF; border-color: var(--border-inverted); font-size: 0.85rem;" id="sandbox-prompt-input" placeholder="Type prompt instruction or select an attack scenario below to place in this box..."></textarea>
+
+            <div style="display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap;">
+              <button class="preset-chip" style="background: rgba(255, 255, 255, 0.08); color: #CBD5E1;" onclick="loadSandboxScenario('exfil')">⚡ Exfiltrate Contacts</button>
+              <button class="preset-chip" style="background: rgba(255, 255, 255, 0.08); color: #CBD5E1;" onclick="loadSandboxScenario('delete')">⚡ Wipe Database</button>
+              <button class="preset-chip" style="background: rgba(255, 255, 255, 0.08); color: #CBD5E1;" onclick="loadSandboxScenario('clean')">✓ Clean Sync Request</button>
+            </div>
+
+            <button class="btn-primary" style="width: 100%; margin-top: 1.25rem; padding: 0.75rem;" id="btn-run-agent-sandbox" onclick="executeAgentSandbox()">
+              Execute Agent Through PromptShield Gateway
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+          </div>
+
+          <!-- Right: Visualized Execution Trace -->
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-inverted); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between;" id="sandbox-outcome-panel">
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-light-muted); text-transform: uppercase;">Gateway Execution Trace</span>
+                <span class="badge-decision badge-allow" id="sandbox-status-pill">STANDING BY</span>
+              </div>
+
+              <h4 id="sandbox-headline" style="font-size: 1.15rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.5rem;">
+                Awaiting Execution
+              </h4>
+              <p id="sandbox-body" style="font-size: 0.88rem; color: var(--text-light-muted); line-height: 1.6;">
+                Select a scenario or type an instruction on the left. The text will be placed in the box, then click <strong>Execute Agent Through PromptShield Gateway</strong>.
+              </p>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-inverted); font-family: var(--font-mono); font-size: 0.78rem; color: #94A3B8;" id="sandbox-tool-trace">
+              Tool Invocation Status: Inactive
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         MODULE 4: DATASET EXPLORER & MODEL BENCHMARK
+         ==================================================== -->
+    <div class="console-tab-pane" id="pane-benchmarks">
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="font-size: 1.25rem; font-weight: 700;">PromptShield NLP Model & Physical Dataset Explorer</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          Trained on physical balanced files (<code>data/train.csv</code>: 2,520 rows, <code>data/test.csv</code>: 631 rows). Every prediction is computed live by the trained sequence classifier.
+        </p>
+      </div>
+
+      <!-- Live Dataset & Model Metrics Header Card -->
+      <div class="workbench-card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98)); border: 1px solid var(--border-inverted); color: #FFFFFF;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-inverted); padding-bottom: 0.75rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px #10B981;"></span>
+            <span style="font-weight: 700; font-size: 1rem; letter-spacing: -0.01em;">Trained Model: PromptShield-NLP-CalibratedClassifier</span>
+          </div>
+          <span class="badge-decision badge-allow" style="font-size: 0.72rem; padding: 0.2rem 0.6rem;">99.4% Held-Out Accuracy</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">Total Dataset</div>
+            <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; color: #FFFFFF; margin-top: 0.25rem;">3,151 rows</div>
+            <div style="font-size: 0.68rem; color: #64748B;">data/dataset_full.csv</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">Training Set</div>
+            <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; color: #FFFFFF; margin-top: 0.25rem;">2,520 rows</div>
+            <div style="font-size: 0.68rem; color: #64748B;">data/train.csv (80%)</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">Held-out Test Set</div>
+            <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; color: #FFFFFF; margin-top: 0.25rem;">631 rows</div>
+            <div style="font-size: 0.68rem; color: #64748B;">data/test.csv (20%)</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+            <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase;">Macro F1 Score</div>
+            <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 700; color: #10B981; margin-top: 0.25rem;">0.9926</div>
+            <div style="font-size: 0.68rem; color: #64748B;">Held-out evaluation</div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.8rem; font-weight: 600; color: #E2E8F0; margin-bottom: 0.5rem;">
+          Pull Authentic Prompts from <code>data/test.csv</code> & Verify Model Inference:
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="preset-chip" style="background: rgba(255, 255, 255, 0.1); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2);" onclick="loadTestDatasetSample('benign')">
+            ✓ Load Benign Sample (data/test.csv)
+          </button>
+          <button class="preset-chip" style="background: rgba(255, 255, 255, 0.1); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2);" onclick="loadTestDatasetSample('instruction_override')">
+            ⚡ Load Instruction Override (data/test.csv)
+          </button>
+          <button class="preset-chip" style="background: rgba(255, 255, 255, 0.1); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2);" onclick="loadTestDatasetSample('prompt_extraction')">
+            ⚡ Load Prompt Extraction (data/test.csv)
+          </button>
+          <button class="preset-chip" style="background: rgba(255, 255, 255, 0.1); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2);" onclick="loadTestDatasetSample('data_exfiltration')">
+            ⚡ Load Data Exfiltration (data/test.csv)
+          </button>
+          <button class="preset-chip" style="background: rgba(255, 255, 255, 0.1); color: #FFFFFF; border-color: rgba(255, 255, 255, 0.2);" onclick="loadTestDatasetSample('unauthorized_action')">
+            ⚡ Load Unauthorized Action (data/test.csv)
+          </button>
+          <button class="preset-chip" style="background: #3B82F6; color: #FFFFFF; border-color: #3B82F6; font-weight: 700;" onclick="loadTestDatasetSample('')">
+            🎲 Random Held-Out Test Prompt
+          </button>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        <!-- Card 1 -->
+        <div class="workbench-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span class="badge-decision badge-allow" style="font-size: 0.7rem;">Live CTF Challenge</span>
+            <a href="https://gandalf.lakera.ai/" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-decoration: none;">Visit Site ↗</a>
+          </div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">Lakera Gandalf Challenge</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Industry-standard interactive challenge where players attempt to extract hidden passwords from an LLM agent across escalating defense levels.
+          </p>
+          <button class="btn-primary" style="width: 100%; font-size: 0.82rem; padding: 0.55rem;" onclick="testBenchmarkAttack('gandalf')">
+            Test Gandalf Evasion Prompt ⚡
+          </button>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="workbench-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span class="badge-decision badge-block" style="font-size: 0.7rem;">Academic Dataset</span>
+            <a href="https://jailbreakbench.github.io/" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-decoration: none;">Repository ↗</a>
+          </div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">JailbreakBench Suite</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Open benchmark tracking standardized adversarial jailbreaks, persona overrides (DAN), and multi-turn manipulation attacks.
+          </p>
+          <button class="btn-primary" style="width: 100%; font-size: 0.82rem; padding: 0.55rem;" onclick="testBenchmarkAttack('jailbreakbench')">
+            Test JailbreakBench Payload ⚡
+          </button>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="workbench-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span class="badge-decision badge-block" style="font-size: 0.7rem;">Agent Benchmark</span>
+            <a href="https://github.com/alphadl/BIPIA" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-decoration: none;">GitHub ↗</a>
+          </div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">BIPIA Indirect Injection</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Benchmark specifically measuring prompt attacks hidden within external emails, web pages, and PDFs ingested by AI email assistants.
+          </p>
+          <button class="btn-primary" style="width: 100%; font-size: 0.82rem; padding: 0.55rem;" onclick="testBenchmarkAttack('bipia')">
+            Test BIPIA Indirect Injection ⚡
+          </button>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="workbench-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <span class="badge-decision badge-allow" style="font-size: 0.7rem;">Red Teaming</span>
+            <a href="https://aivillage.org/" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-decoration: none;">AI Village ↗</a>
+          </div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">DEF CON Generative Red Team</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Adversarial prompt datasets generated during the White House-supported DEF CON 31 Generative Red Teaming competition.
+          </p>
+          <button class="btn-primary" style="width: 100%; font-size: 0.82rem; padding: 0.55rem;" onclick="testBenchmarkAttack('defcon')">
+            Test DEF CON Red Team Prompt ⚡
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================
+         MODULE 5: SESSION AUDIT & SECURITY LOGS
+         ==================================================== -->
+    <div class="console-tab-pane" id="pane-logs">
+      <div class="workbench-card">
+        <div class="workbench-card-header">
+          <div>
+            <h3 style="font-size: 1.15rem; font-weight: 700;">Live Session Audit Trail</h3>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Real-time database records of all prompt inspections performed during this session.</p>
+          </div>
+          <button class="btn-secondary" style="font-size: 0.82rem; padding: 0.5rem 1rem;" onclick="loadSessionAuditLogs()">
+            Refresh Audit Logs 🔄
+          </button>
+        </div>
+
+        <div class="audit-table-wrapper">
+          <table class="audit-table">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-subtle); color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;">
+                <th style="padding: 0.75rem;">Analysis ID</th>
+                <th style="padding: 0.75rem;">Source</th>
+                <th style="padding: 0.75rem;">Risk</th>
+                <th style="padding: 0.75rem;">Decision</th>
+                <th style="padding: 0.75rem;">Latency</th>
+                <th style="padding: 0.75rem;">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body">
+              <tr>
+                <td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-muted);">Loading session audit records...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div>
+        <strong>PromptShield AI</strong> — Pre-LLM Security Firewall
+      </div>
+      <div>
+        <a href="/" style="color: var(--text-muted); text-decoration: none; margin-right: 1rem;">Overview</a>
+        <a href="/test" style="color: var(--accent); text-decoration: none; font-weight: 600; margin-right: 1rem;">Security Lab</a>
+        <a href="/docs" target="_blank" style="color: var(--text-muted); text-decoration: none;">API Documentation ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/test_app.js"></script>
+</body>
+</html>
