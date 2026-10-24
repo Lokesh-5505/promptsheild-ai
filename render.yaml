@@ -22,3 +22,5 @@ services:
         value: "69"
       - key: POLICY_HIGH_MAX
         value: "89"
+      - key: MONGO_URI
+        value: memory

@@ -8,5 +8,6 @@ if BASE_DIR not in sys.path:
 
 from src.api.main import app
 
-# Vercel entrypoint
-handler = app
+# Export ASGI app instance directly for Vercel (@vercel/python)
+# NOTE: Do NOT assign `handler = app` as Vercel treats `handler` as a synchronous
+# BaseHTTPRequestHandler, breaking ASGI/FastAPI serverless execution.

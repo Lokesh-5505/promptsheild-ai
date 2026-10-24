@@ -11,11 +11,17 @@ from src.api.routes import analyze, analyses, feedback, policy_routes, health, d
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: connect to database
-    await db_manager.connect()
+    # Startup: connect to database with fault-tolerance for serverless/container runtimes
+    try:
+        await db_manager.connect()
+    except Exception as e:
+        print(f"[Lifespan] Non-fatal database startup error: {e}")
     yield
     # Shutdown: disconnect
-    await db_manager.disconnect()
+    try:
+        await db_manager.disconnect()
+    except Exception as e:
+        print(f"[Lifespan] Non-fatal database shutdown error: {e}")
 
 app = FastAPI(
     title="PromptShield AI",
